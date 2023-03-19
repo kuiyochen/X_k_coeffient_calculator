@@ -87,7 +87,7 @@ def lemma35(L):
 def lemma35_aux(L): # programming with recursion is equvalent to proving via induction
     l = len(L)
     if l == 0:
-        return []
+        return sympy.S(1)
     if l == 1:
         return symbols(partition2text(L[0]))
     L1 = L[:-1]
