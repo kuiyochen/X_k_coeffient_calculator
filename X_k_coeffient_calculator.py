@@ -60,8 +60,7 @@ def get_list_of_permutations(m): # S_m
         # yield  Permutation(p).full_cyclic_form
 
 def sort_aux(L): # sort the list of lists
-    L = [sorted(a) for a in L]
-    return sorted(L)
+    return sorted([sorted(a) for a in L])
 def set_partition(sigma, L):
     list_ = []
     for ids in sigma:
@@ -84,8 +83,8 @@ def Cstb(L):
 def lemma35(L):
     L = L.copy()
     L = [[i] for i in L]
-    return lemma35_aux(L).simplify()
-def lemma35_aux(L):
+    return lemma35_aux(L).simplify().expand()
+def lemma35_aux(L): # programming with recursion is equvalent to proving via induction
     l = len(L)
     if l == 0:
         return []
@@ -95,9 +94,7 @@ def lemma35_aux(L):
     L_last = L[-1]
     temp = lemma35_aux(L1) * symbols(partition2text(L_last))
     for i in range(l - 1):
-        L2 = [a.copy() for a in L1]
-        L2[i] += L_last.copy()
-        temp -= lemma35_aux(sort_aux(L2))
+        temp -= lemma35_aux(sort_aux([a.copy() if j != i else (a+L_last).copy() for j, a in enumerate(L1)]))
     return temp
 
 def X_k(k, use_lemma35 = False):
@@ -110,7 +107,7 @@ def X_k(k, use_lemma35 = False):
             for p in get_list_of_permutations(len(L)):
                 inner_sum += sympy.S(p.signature()) * A_sigma_L(p.full_cyclic_form, L)
         outer_sum += inner_sum / sympy.S(Cstb(L))
-    return outer_sum.simplify()
+    return outer_sum.simplify().expand()
 
 for k in range(1, 6+1):
     print(k, ":")
@@ -132,5 +129,4 @@ for k in range(1, 6+1):
     $
     (this is latex code).
 '''
-
 
